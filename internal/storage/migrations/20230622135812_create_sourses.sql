@@ -1,9 +1,16 @@
 -- +goose Up
 -- +goose StatementBegin
-SELECT 'up SQL query';
+CREATE TABLE sources
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    feed_url   VARCHAR(255) NOT NULL,
+    priority   INT          NOT NULL,
+    created_at TIMESTAMP    NOT NULL DEFAULT NOW()
+);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-SELECT 'down SQL query';
+DROP TABLE IF EXISTS sources;
 -- +goose StatementEnd
