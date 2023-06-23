@@ -9,7 +9,7 @@ import (
 	"main.go/internal/model"
 )
 
-type RSSSource struct {
+type RSSSource struct { 
 	URL 		string
 	SourceID 	int64
 	SourceName 	string
@@ -31,11 +31,11 @@ func (s RSSSource) Fetch(ctx context.Context) ([]model.Item, error) {
 	
 	return lo.Map(feed.Items, func(item *rss.Item, _ int) model.Item {
 		return model.Item {
-			Title: item.Title,
+			Title: 		item.Title,
 			Categories: item.Categories,
-			Link: item.Link,
-			Date: item.Date,
-			Summary: item.Summary,
+			Link: 		item.Link,
+			Date: 		item.Date,
+			Summary:	item.Summary,
 			SourceName: s.SourceName,
 		}
 	}), nil
