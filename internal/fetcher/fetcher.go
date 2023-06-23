@@ -1,110 +1,142 @@
-package storage
+package fetcher
 
 import (
 	"context"
+	"log"
+	"strings"
+	"sync"
 	"time"
 
-	"github.com/jmoiron/sqlx"
-	"github.com/samber/lo"
+	"github.com/tomakado/containers/set"
 	"main.go/internal/model"
-	// "github.com/amodotomi/newsbotmangod3.0/internal/model""
+	src "main.go/internal/source"
+	
+	// "github.com/amodotomi/news-telegram-bot/internal/model"
+	// src "github.com/amodotomi/news-telegram-bot/internal/source"
 )
 
-type SourcePostgresStorage struct {
-	db *sqlx.DB
+//go:generate moq --out=mocks/mock_article_storage.go --pkg=mocks . ArticleStorage
+type ArticleStorage interface {
+	Store(ctx context.Context, article model.Article) error
 }
 
-func NewSourceStorage(db *sqlx.DB) *SourcePostgresStorage {
-	return &SourcePostgresStorage{db: db}
+//go:generate moq --out=mocks/mock_sources_provider.go --pkg=mocks . SourcesProvider
+type SourcesProvider interface {
+	Sources(ctx context.Context) ([]model.Source, error)
 }
 
-func (s *SourcePostgresStorage) Sources(ctx context.Context) ([]model.Source, error) {
-	conn, err := s.db.Connx(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer conn.Close()
-
-	var sources []dbSource
-	if err := conn.SelectContext(ctx, &sources, `SELECT * FROM sources`); err != nil {
-		return nil, err
-	}
-
-	return lo.Map(sources, func(source dbSource, _ int) model.Source { return model.Source(source) }), nil
+//go:generate moq --out=mocks/mock_source.go --pkg=mocks . Source
+type Source interface {
+	ID() int64
+	Name() string
+	Fetch(ctx context.Context) ([]model.Item, error)
 }
 
-func (s *SourcePostgresStorage) SourceByID(ctx context.Context, id int64) (*model.Source, error) {
-	conn, err := s.db.Connx(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer conn.Close()
+type Fetcher struct {
+	articles ArticleStorage
+	sources  SourcesProvider
 
-	var source dbSource
-	if err := conn.GetContext(ctx, &source, `SELECT * FROM sources WHERE id = $1`, id); err != nil {
-		return nil, err
-	}
-
-	return (*model.Source)(&source), nil
+	fetchInterval  time.Duration
+	filterKeywords []string
 }
 
-func (s *SourcePostgresStorage) Add(ctx context.Context, source model.Source) (int64, error) {
-	conn, err := s.db.Connx(ctx)
-	if err != nil {
-		return 0, err
+func New(
+	articleStorage ArticleStorage,
+	sourcesProvider SourcesProvider,
+	fetchInterval time.Duration,
+	filterKeywords []string,
+) *Fetcher {
+	return &Fetcher{
+		articles:       articleStorage,
+		sources:        sourcesProvider,
+		fetchInterval:  fetchInterval,
+		filterKeywords: filterKeywords,
 	}
-	defer conn.Close()
-
-	var id int64
-
-	row := conn.QueryRowxContext(
-		ctx,
-		`INSERT INTO sources (name, feed_url, priority)
-					VALUES ($1, $2, $3) RETURNING id;`,
-		source.Name, source.FeedURL, source.Priority,
-	)
-
-	if err := row.Err(); err != nil {
-		return 0, err
-	}
-
-	if err := row.Scan(&id); err != nil {
-		return 0, err
-	}
-
-	return id, nil
 }
 
-func (s *SourcePostgresStorage) SetPriority(ctx context.Context, id int64, priority int) error {
-	conn, err := s.db.Connx(ctx)
+func (f *Fetcher) Start(ctx context.Context) error {
+	ticker := time.NewTicker(f.fetchInterval)
+	defer ticker.Stop()
+
+	if err := f.Fetch(ctx); err != nil {
+		return err
+	}
+
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-ticker.C:
+			if err := f.Fetch(ctx); err != nil {
+				return err
+			}
+		}
+	}
+}
+
+func (f *Fetcher) Fetch(ctx context.Context) error {
+	sources, err := f.sources.Sources(ctx)
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
 
-	_, err = conn.ExecContext(ctx, `UPDATE sources SET priority = $1 WHERE id = $2`, priority, id)
+	var wg sync.WaitGroup
 
-	return err
+	for _, source := range sources {
+		wg.Add(1)
+
+		go func(source Source) {
+			defer wg.Done()
+
+			items, err := source.Fetch(ctx)
+			if err != nil {
+				log.Printf("[ERROR] failed to fetch items from source %q: %v", source.Name(), err)
+				return
+			}
+
+			if err := f.processItems(ctx, source, items); err != nil {
+				log.Printf("[ERROR] failed to process items from source %q: %v", source.Name(), err)
+				return
+			}
+		}(src.NewRSSSourceFromModel(source))
+	}
+
+	wg.Wait()
+
+	return nil
 }
 
-func (s *SourcePostgresStorage) Delete(ctx context.Context, id int64) error {
-	conn, err := s.db.Connx(ctx)
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
+func (f *Fetcher) processItems(ctx context.Context, source Source, items []model.Item) error {
+	for _, item := range items {
+		item.Date = item.Date.UTC()
 
-	if _, err := conn.ExecContext(ctx, `DELETE FROM sources WHERE id = $1`, id); err != nil {
-		return err
+		if f.itemShouldBeSkipped(item) {
+			log.Printf("[INFO] item %q (%s) from source %q should be skipped", item.Title, item.Link, source.Name())
+			continue
+		}
+
+		if err := f.articles.Store(ctx, model.Article{
+			SourceID:    source.ID(),
+			Title:       item.Title,
+			Link:        item.Link,
+			Summary:     item.Summary,
+			PublishedAt: item.Date,
+		}); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-type dbSource struct {
-	ID        int64     `db:"id"`
-	Name      string    `db:"name"`
-	FeedURL   string    `db:"feed_url"`
-	Priority  int       `db:"priority"`
-	CreatedAt time.Time `db:"created_at"`
+func (f *Fetcher) itemShouldBeSkipped(item model.Item) bool {
+	categoriesSet := set.New(item.Categories...)
+
+	for _, keyword := range f.filterKeywords {
+		if categoriesSet.Contains(keyword) || strings.Contains(strings.ToLower(item.Title), keyword) {
+			return true
+		}
+	}
+
+	return false
 }
