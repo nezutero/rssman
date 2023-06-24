@@ -12,10 +12,9 @@ import (
 
 	"github.com/go-shiori/go-readability"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"main.go/internal/botkit/markup"
-	"main.go/internal/model"
-	// "github.com/amodotomi/news-feed-bot/internal/botkit/markup"
-	// "github.com/amodotomi/newsbotmangod3.0/internal/model"
+
+	"github.com/amodotomi/news-telegram-bot/internal/botkit/markup"
+	"github.com/amodotomi/news-telegram-bot/internal/model"
 )
 
 type ArticleProvider interface {

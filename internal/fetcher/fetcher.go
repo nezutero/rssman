@@ -8,11 +8,9 @@ import (
 	"time"
 
 	"github.com/tomakado/containers/set"
-	"main.go/internal/model"
-	src "main.go/internal/source"
 	
-	// "github.com/amodotomi/news-telegram-bot/internal/model"
-	// src "github.com/amodotomi/news-telegram-bot/internal/source"
+	"github.com/amodotomi/news-telegram-bot/internal/model"
+	src "github.com/amodotomi/news-telegram-bot/internal/source"
 )
 
 //go:generate moq --out=mocks/mock_article_storage.go --pkg=mocks . ArticleStorage
