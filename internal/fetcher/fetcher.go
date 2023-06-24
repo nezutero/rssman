@@ -9,8 +9,8 @@ import (
 
 	"github.com/tomakado/containers/set"
 	
-	"github.com/amodotomi/news-telegram-bot/internal/model"
-	src "github.com/amodotomi/news-telegram-bot/internal/source"
+	"main.go/internal/model"
+	src "main.go/internal/source"
 )
 
 //go:generate moq --out=mocks/mock_article_storage.go --pkg=mocks . ArticleStorage

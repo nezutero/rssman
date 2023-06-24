@@ -7,9 +7,9 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
-	"github.com/amodotomi/news-telegram-bot/internal/botkit"
-	"github.com/amodotomi/news-telegram-bot/internal/botkit/markup"
-	"github.com/amodotomi/news-telegram-bot/internal/model"
+	"main.go/internal/botkit"
+	"main.go/internal/botkit/markup"
+	"main.go/internal/model"
 )
 
 type SourceProvider interface {

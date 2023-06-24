@@ -12,14 +12,14 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/amodotomi/news-telegram-bot/internal/bot"
-	"github.com/amodotomi/news-telegram-bot/internal/bot/middleware"
-	"github.com/amodotomi/news-telegram-bot/internal/botkit"
-	"github.com/amodotomi/news-telegram-bot/internal/config"
-	"github.com/amodotomi/news-telegram-bot/internal/fetcher"
-	"github.com/amodotomi/news-telegram-bot/internal/notifier"
-	"github.com/amodotomi/news-telegram-bot/internal/storage"
-	"github.com/amodotomi/news-telegram-bot/internal/summary"
+	"main.go/internal/bot"
+	"main.go/internal/bot/middleware"
+	"main.go/internal/botkit"
+	"main.go/internal/config"
+	"main.go/internal/fetcher"
+	"main.go/internal/notifier"
+	"main.go/internal/storage"
+	"main.go/internal/summary"
 )
 
 func main() {
