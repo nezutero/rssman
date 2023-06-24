@@ -5,7 +5,7 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
-	"github.com/amodotomi/news-telegram-bot/internal/botkit"
+	"main.go/internal/botkit"
 )
 
 type PrioritySetter interface {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
-	"github.com/amodotomi/news-telegram-bot/internal/model"
+	"main.go/internal/model"
 )
 
 type SourcePostgresStorage struct {
