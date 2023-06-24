@@ -6,7 +6,7 @@ import (
 	"github.com/SlyMarbo/rss"
 	"github.com/samber/lo"
 
-	"main.go/internal/model"
+	"github.com/amodotomi/news-telegram-bot/internal/model"
 )
 
 type RSSSource struct { 
