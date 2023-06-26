@@ -11,11 +11,9 @@ It is also possible to add sources through commands in the telegram bot.
 git clone https://github.com/amodotomi/news-telegram-bot/
 
 ```bash
-go get -d ./...
+go get go.mod
 ```
-This command will download and install all the dependencies defined in project's go.mod file. The -d flag ensures that only the dependencies are downloaded, without installing the packages.
-
-If you're using Go modules and have a go.mod file in your project, this command will fetch all the dependencies specified in that file. If you're not using modules, it will fetch the dependencies specified in your project's GOPATH.
+This command will download and install all the dependencies defined in project's go.mod file.
 
 ## Usage
 - create file with name "config.local.hcl" and inside the file create:
