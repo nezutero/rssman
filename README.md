@@ -33,9 +33,11 @@ go get github.com/kenjitheman/rss_ai_tgbot
 ```
 
 - or
+
 ```
 git clone https://github.com/kenjitheman/rss_ai_tgbot 
 ```
+- to get all deps
 
 ```
 go get go.mod
