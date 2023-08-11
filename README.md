@@ -29,7 +29,12 @@ it is also possible to add sources through commands in the telegram bot
 ## Installation
 
 ```
-git clone https://github.com/amodotomi/news-telegram-bot/
+go get github.com/kenjitheman/rss_ai_tgbot
+```
+
+- or
+```
+git clone https://github.com/kenjitheman/rss_ai_tgbot 
 ```
 
 ```
