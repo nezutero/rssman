@@ -2,11 +2,7 @@
 
 ###
 
-<img align="right" height="200" src="https://media.tenor.com/6OCEdkhjHKUAAAAC/d4dj-first-mix-d4dj.gif"  />
-
-###
-
-<div align="left">
+<div align="center">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" height="200" alt="go logo"  />
   <img width="" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="200" alt="docker logo"  />
