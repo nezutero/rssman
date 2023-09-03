@@ -1,4 +1,4 @@
-<h3 align="center">telegram bot, which is able to parse RSS and use the openai api to generate a short summary</h3>
+<h3 align="center">tg bot, able to parse RSS, use the openai api to generate a summary</h3>
 
 ###
 
@@ -10,18 +10,17 @@
 
 ###
 
+##
 - telegram bot, which is able to parse RSS and use the openai api to generate a short summary and a link to the source
-- it is also possible to add sources through commands in the telegram bot
+- it's also possible to add sources through commands in the telegram bot
 
 ## installation
 
-- to clone the project:
-  
 ```
 git clone https://github.com/kenjitheman/rss_ai_tgbot 
 ```
 
-- to install all dependencies
+- install all dependencies
 
 ```
 go mod tidy
@@ -45,6 +44,7 @@ openai_promt = "Make a summary of the text"   // to make summary
 cd cmd
 go run main.go
 ```
+
 - or using docker:
 
 ```
