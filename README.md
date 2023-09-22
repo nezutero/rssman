@@ -1,4 +1,4 @@
-## tg bot, able to parse RSS, use the openai api to generate a summary
+### tg bot, able to parse RSS, use the openai api to generate a summary
 
 ###
 
