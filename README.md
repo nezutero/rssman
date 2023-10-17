@@ -10,19 +10,18 @@
 
 ###
 
-##
 - telegram bot, which is able to parse RSS and use the openai api to generate a short summary and a link to the source
 - it's also possible to add sources through commands in the telegram bot
 
 ## installation
 
-```
+```sh
 git clone https://github.com/kenjitheman/rss_ai_tgbot 
 ```
 
 - install all dependencies
 
-```
+```sh
 go mod tidy
 ```
 
@@ -30,7 +29,7 @@ go mod tidy
 
 - create file with name "config.local.hcl" and inside the file create:
 
-```
+```hcl
 tolegram_bot_token = "your token"
 openai_token = "your token"
 telegram_channel_id = -1116543419111    // example id
@@ -40,14 +39,14 @@ openai_promt = "Make a summary of the text"   // to make summary
 
 - run the app using:
 
-```
+```sh
 cd cmd
 go run main.go
 ```
 
 - or using docker:
 
-```
+```sh
 docker build -t your_image_name .
 docker run -d -p 8080:80 your_image_name
 ```
@@ -56,25 +55,25 @@ docker run -d -p 8080:80 your_image_name
 
 - to add source:
 
-```
+```go
 /addsource {"name": "source name", "url": "source url"}
 ```
 
 - to get sources:
 
-```
+```go
 /listsources
 ```
 
 - to delete source:
 
-```
+```go
 /deletesource {"name": "source name"}
 ```
 
 - to set source priority:
 
-```
+```go
 /setpriority 
 ```
 
