@@ -16,7 +16,7 @@
 ## installation
 
 ```sh
-git clone https://github.com/kenjitheman/rss_ai_tgbot 
+git clone https://github.com/kenjitheman/rssman
 ```
 
 - install all dependencies
