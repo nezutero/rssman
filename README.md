@@ -1,33 +1,20 @@
-### tg bot, able to parse RSS, use the openai api to generate a summary
+> Telegram bot, which is able to parse RSS and use the openai api to generate a short summary and a link to the source. It's also possible to add sources through commands in the telegram bot.
 
-###
-
-<div align="center">
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" height="200" alt="go logo"  />
-  <img width="" />
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="200" alt="docker logo"  />
-</div>
-
-###
-
-- telegram bot, which is able to parse RSS and use the openai api to generate a short summary and a link to the source
-- it's also possible to add sources through commands in the telegram bot
-
-## installation
+## Installation
 
 ```sh
-git clone https://github.com/kenjitheman/rss_ai_tgbot 
+git clone https://github.com/kenjitheman/rssman
 ```
 
-- install all dependencies
+- Install all dependencies:
 
 ```sh
 go mod tidy
 ```
 
-## usage
+## Usage
 
-- create file with name "config.local.hcl" and inside the file create:
+- Create file with name "config.local.hcl" and inside the file create:
 
 ```hcl
 tolegram_bot_token = "your token"
@@ -37,52 +24,52 @@ telegram_channel_id = -1116543419111    // example id
 openai_promt = "Make a summary of the text"   // to make summary
 ```
 
-- run the app using:
+- Run the app using:
 
 ```sh
 cd cmd
 go run main.go
 ```
 
-- or using docker:
+- Or using docker:
 
 ```sh
 docker build -t your_image_name .
 docker run -d -p 8080:80 your_image_name
 ```
 
-## commands
+## Commands
 
-- to add source:
+- To add source:
 
 ```go
 /addsource {"name": "source name", "url": "source url"}
 ```
 
-- to get sources:
+- To get sources:
 
 ```go
 /listsources
 ```
 
-- to delete source:
+- To delete source:
 
 ```go
 /deletesource {"name": "source name"}
 ```
 
-- to set source priority:
+- To set source priority:
 
 ```go
 /setpriority 
 ```
 
-## contributing
+## Contributing
 
-- pull requests are welcome, for major changes, please open an issue first
-to discuss what you would like to change
+- Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
 
-- please make sure to update tests as appropriate
+- Please make sure to update tests as appropriate.
 
 ## license
 
