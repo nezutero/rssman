@@ -17,13 +17,13 @@
 
 ## Installation
 
-```shell
+```sh
 git clone https://github.com/kenjitheman/rssman
 ```
 
 - Install all dependencies:
 
-```shell
+```sh
 go mod tidy
 ```
 
@@ -41,14 +41,14 @@ openai_promt = "Make a summary of the text"   // to make summary
 
 - Run the app using:
 
-```shell
+```sh
 cd cmd
 go run main.go
 ```
 
 - Or using docker:
 
-```shell
+```sh
 docker build -t your_image_name .
 docker run -d -p 8080:80 your_image_name
 ```
