@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-git clone https://github.com/kenjitheman/rssman
+git clone https://github.com/nezutero/rssman
 ```
 
 - Install all dependencies:
